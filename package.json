@@ -1,0 +1,21 @@
+{
+  "name": "@luobotang/nfa",
+  "version": "0.1.0",
+  "description": "NFA generator, simulator",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "test": "mocha"
+  },
+  "keywords": [
+    "nfa"
+  ],
+  "author": "luobotang",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "vis": "^4.21.0",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.1"
+  }
+}

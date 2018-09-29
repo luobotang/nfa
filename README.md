@@ -1,2 +1,5 @@
 # nfa
-NFA generator, simulator
+
+NFA generator, simulator.
+
+[DEMO](http://luobotang.cn/nfa/app/)
