@@ -3,10 +3,14 @@ const nfa = require('..')
 
 window.nfa = nfa // for debug
 
-document.querySelector('#action').addEventListener('click', () => {
+document.querySelector('#action').addEventListener('click', render)
+
+render() // init
+
+function render() {
   const regexp = document.querySelector('#regexp').value
   new vis.Network(document.querySelector('#canvas'), drawNfa(nfa.regex2nfa(regexp)), {})
-})
+}
 
 function drawNfa(nfa) {
   const nodes = [{id: '0', label: '0', color: {border: 'green', background: 'rgb(150,255,150)'}}]
@@ -33,7 +37,7 @@ function drawNfa(nfa) {
       label: isTypeE ? 'ε' : (s2.symbol || ''),
       arrows: 'to',
       color:{color:'gray'},
-      font: isTypeE ? {size: 10, align: 'middle'} : {size: 14, align: 'middle', color: 'rgb(255,0,0)'}
+      font: isTypeE ? {align: 'horizontal'} : {align: 'horizontal', color: 'rgb(255,0,0)'}
     })
   }
 
