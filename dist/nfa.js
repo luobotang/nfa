@@ -227,66 +227,6 @@ function regex2post(str) {
   return output.join('')
 }
 
-function regex2pos1t(str) {
-  const ex_stack = []
-  const op_stack = []
-
-  for (let ch, i = 0, len = str.length; i < len; i++) {
-    ch = str[i]
-    switch(ch) {
-      case '|':
-        check_op()
-        op_stack.push('|')
-        ex_stack.push('')
-        break
-      case '*':
-      case '?':
-      case '+':
-        {
-          const e = ex_stack.pop()
-          ex_stack.push(e + ch)
-        }
-        break
-      case '(':
-        {
-          ex_stack.push('')
-        }
-        break
-      case ')':
-        check_op()
-        break
-      default: // a-z0-9
-        // TODO fixbug: should check next char *?+ first!
-        {
-          const e = ex_stack.pop()
-          if (e) {
-            ex_stack.push(e + ch + '.')
-          } else {
-            ex_stack.push(ch)
-          }
-        }
-        break
-    }
-  }
-
-  function check_op() {
-    op = op_stack.pop()
-    if (op) { // |
-      const e2 = ex_stack.pop()
-      const e1 = ex_stack.pop()
-      ex_stack.push(e1 + e2 + op) // [...,'a', 'b'] -> [..., 'ab|']
-    } else if (ex_stack.length === 2) { // need union
-      const e2 = ex_stack.pop()
-      const e1 = ex_stack.pop()
-      ex_stack.push(e1 + e2 + '.')
-    }
-  }
-
-  check_op()
-
-  return ex_stack.join('')
-}
-
 function post2nfa(str) {
   const stack = []
 
@@ -439,12 +379,9 @@ module.exports = class Fragment {
 /* 4 */
 /***/ (function(module, exports) {
 
-let uid = 0
-
 exports.match = function (nfa, str) {
   let c_list = []
   let n_list = []
-  const listid = ++uid
 
   addState(c_list, nfa.start)
 
@@ -462,15 +399,15 @@ exports.match = function (nfa, str) {
       let s = c_list[i]
       if (s.symbol === ch) {
         addState(n_list, s.out)
+        addState(n_list, s.out1)
       }
     }
   }
 
   function addState(list, s) {
-    if (!s || s.lastlist === listid) {
+    if (!s || list.indexOf(s) > -1) {
       return
     }
-    s.lastlist = listid
     if (s.type === 'e') {
       addState(list, s.out)
       addState(list, s.out1)

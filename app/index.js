@@ -3,9 +3,18 @@ const nfa = require('..')
 
 window.nfa = nfa // for debug
 
+document.querySelector('#regexp').addEventListener('input', invokeLater(render))
 document.querySelector('#action').addEventListener('click', render)
 
 render() // init
+
+function invokeLater(fn, delay = 200) {
+  let timer
+  return () => {
+    clearTimeout(timer)
+    timer = setTimeout(() => fn(), delay)
+  }
+}
 
 function render() {
   const regexp = document.querySelector('#regexp').value
