@@ -253,9 +253,9 @@ function post2nfa(str) {
           const e2 = stack.pop()
           const e1 = stack.pop()
           e1.out.out = e2.start
-          const o = new State('e')
-          e2.out.out = o
-          stack.push(new Fragment(e1.start, o))
+          // const o = new State('e')
+          // e2.out.out = o
+          stack.push(new Fragment(e1.start, e2.out))
         }
         break
       case '*':
@@ -294,9 +294,9 @@ function post2nfa(str) {
         {
           const s = new State()
           s.symbol = ch
-          const o = new State('e')
-          s.out = o
-          stack.push(new Fragment(s, o))
+          // const o = new State('e')
+          // s.out = o
+          stack.push(new Fragment(s, s))
         }
         break
     }
