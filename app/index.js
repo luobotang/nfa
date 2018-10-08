@@ -1,6 +1,8 @@
 const vis = require('vis')
 const nfa = require('..')
 
+let network = null
+
 window.nfa = nfa // for debug
 
 document.querySelector('#regexp').addEventListener('input', invokeLater(render))
@@ -18,7 +20,13 @@ function invokeLater(fn, delay = 200) {
 
 function render() {
   const regexp = document.querySelector('#regexp').value
-  new vis.Network(document.querySelector('#canvas'), drawNfa(nfa.regex2nfa(regexp)), {})
+  const data = drawNfa(nfa.regex2nfa(regexp))
+  if (!network) {
+    const options = {}
+    network = new vis.Network(document.querySelector('#canvas'), data, options)
+  } else {
+    network.setData(data)
+  }
 }
 
 function drawNfa(nfa) {

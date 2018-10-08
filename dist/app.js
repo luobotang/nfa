@@ -253,8 +253,6 @@ function post2nfa(str) {
           const e2 = stack.pop()
           const e1 = stack.pop()
           e1.out.out = e2.start
-          // const o = new State('e')
-          // e2.out.out = o
           stack.push(new Fragment(e1.start, e2.out))
         }
         break
@@ -282,11 +280,9 @@ function post2nfa(str) {
       case '+':
         {
           const e = stack.pop()
-          const s = new State('e')
-          s.out = e.start
-          e.out.out = s
+          e.out.out = e.start
           const o = new State('e')
-          s.out1 = o
+          e.out.out1 = o
           stack.push(new Fragment(e.start, o))
         }
         break
@@ -294,8 +290,6 @@ function post2nfa(str) {
         {
           const s = new State()
           s.symbol = ch
-          // const o = new State('e')
-          // s.out = o
           stack.push(new Fragment(s, s))
         }
         break
@@ -432,6 +426,8 @@ exports.match = function (nfa, str) {
 const vis = __webpack_require__(6)
 const nfa = __webpack_require__(1)
 
+let network = null
+
 window.nfa = nfa // for debug
 
 document.querySelector('#regexp').addEventListener('input', invokeLater(render))
@@ -449,7 +445,13 @@ function invokeLater(fn, delay = 200) {
 
 function render() {
   const regexp = document.querySelector('#regexp').value
-  new vis.Network(document.querySelector('#canvas'), drawNfa(nfa.regex2nfa(regexp)), {})
+  const data = drawNfa(nfa.regex2nfa(regexp))
+  if (!network) {
+    const options = {}
+    network = new vis.Network(document.querySelector('#canvas'), data, options)
+  } else {
+    network.setData(data)
+  }
 }
 
 function drawNfa(nfa) {
