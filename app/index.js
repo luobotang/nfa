@@ -20,7 +20,7 @@ function invokeLater(fn, delay = 200) {
 
 function render() {
   const regexp = document.querySelector('#regexp').value
-  const data = drawNfa(nfa.regex2nfa(regexp))
+  const data = drawNfa(nfa.NFA.createFromeRegex(regexp))
   if (!network) {
     const options = {}
     network = new vis.Network(document.querySelector('#canvas'), data, options)
@@ -30,31 +30,34 @@ function render() {
 }
 
 function drawNfa(nfa) {
-  const nodes = [{id: '0', label: '0', color: {border: 'green', background: 'rgb(150,255,150)'}}]
+  const nodes = []
   const edges = []
+  const {transition_map} = nfa
 
-  addEdge({id: 0}, nfa.start)
-
-  window.nfa.travelState(nfa.start, (state) => {
-    if (state.type === 'end') {
-      nodes.push({id: state.id, label: '' + state.id, color: {border: 'red', background: 'rgb(255,150,150)'}})
-      return
+  nfa.travel((state) => {
+    let node = {id: state.id, label: '' + state.id}
+    if (nodes.length === 0) {
+      node.color = {border: 'green', background: 'rgb(150,255,150)'}
     }
-    nodes.push({id: state.id, label: '' + state.id})
-    addEdge(state, state.out)
-    addEdge(state, state.out1)
+    if (state.transitions.length) {
+      state.transitions.forEach(addEdge)
+    } else {
+      node.color = {border: 'red', background: 'rgb(255,150,150)'}
+    }
+    nodes.push(node)
   })
 
-  function addEdge(s1, s2) {
-    if (!s1 || !s2) return
-    const isTypeE = s2.type === 'e'
+  function addEdge(id) {
+    const transiton = transition_map.get(id)
+    const {from, to, input} = transiton
+    const isEpsilon = input === ''
     edges.push({
-      from: s1.id,
-      to: s2.id,
-      label: isTypeE ? 'ε' : (s2.symbol || ''),
+      from,
+      to,
+      label: isEpsilon ? 'ϵ' : input,
       arrows: 'to',
-      color:{color:'gray'},
-      font: isTypeE ? {align: 'horizontal'} : {align: 'horizontal', color: 'rgb(255,0,0)'}
+      color: {color: 'gray'},
+      font: isEpsilon ? {align: 'horizontal'} : {align: 'horizontal', color: 'rgb(255,0,0)'}
     })
   }
 

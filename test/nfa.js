@@ -1,5 +1,5 @@
 const assert = require('assert')
-const { regex2post, post2nfa, travelState } = require('../')
+const { regex2post, NFA } = require('../')
 
 describe('nfa', function() {
   it('regex2post()', function() {
@@ -24,69 +24,123 @@ describe('nfa', function() {
     }
   })
 
-  it('post2nfa()', function() {
+  it('createFromPostfixExpression()', () => {
+    assert_post_with_nfa('a', {
+      start: 0,
+      end: 1,
+      state_map: [[0, {id: 0, transitions: [0]}], [1, {id: 1, transitions: []}]],
+      transition_map: [[0, {id: 0, from: 0, to: 1, input: 'a'}]]
+    })
 
-    assert_post_with_nfa('ab|c.', 5)
-    assert_post_with_nfa('a+b.', 3)
-    assert_post_with_nfa('a+b|c.', 5)
-    assert_post_with_nfa('a*b|c.', 6)
+    assert_post_with_nfa('ab|', {
+      start: 4,
+      end: 5,
+      state_map: [
+        [0, {id: 0, transitions: [0]}],
+        [1, {id: 1, transitions: [4]}],
+        [2, {id: 2, transitions: [1]}],
+        [3, {id: 3, transitions: [5]}],
+        [4, {id: 4, transitions: [2,3]}],
+        [5, {id: 5, transitions: []}],
+      ],
+      transition_map: [
+        [0, {id: 0, from: 0, to: 1, input: 'a'}],
+        [1, {id: 1, from: 2, to: 3, input: 'b'}],
+        [2, {id: 2, from: 4, to: 0, input: ''}],
+        [3, {id: 3, from: 4, to: 2, input: ''}],
+        [4, {id: 4, from: 1, to: 5, input: ''}],
+        [5, {id: 5, from: 3, to: 5, input: ''}],
+      ]
+    })
 
-    function assert_post_with_nfa(post, nfa_state_count) {
-      const nfa = post2nfa(post)
-      const result = count_nfa_state(nfa)
-      if (result !== nfa_state_count) {
-        throw new Error([
-          `nfa state count expect: ${nfa_state_count}, result: ${result}`,
-          `post: "${post}"`,
-          'nfa:',
-          printNfa(nfa)
-        ].join('\n'))
-      }
-    }
+    assert_post_with_nfa('ab.', {
+      start: 0,
+      end: 3,
+      state_map: [
+        [0, {id: 0, transitions: [0]}],
+        [1, {id: 1, transitions: [1]}],
+        [3, {id: 3, transitions: []}]
+      ],
+      transition_map: [
+        [0, {id: 0, from: 0, to: 1, input: 'a'}],
+        [1, {id: 1, from: 1, to: 3, input: 'b'}]
+      ]
+    })
 
-    function count_nfa_state(nfa) {
-      let n = 0
-      travelState(nfa.start, () => n++)
-      return n
+    assert_post_with_nfa('a*', {
+      start: 2,
+      end: 3,
+      /**
+       * 0 -> 1
+       * 2 -> 0
+       * 2 -> 3
+       * 1 -> 0
+       * 1 -> 3
+       */
+      state_map: [
+        [0, {id: 0, transitions: [0]}],
+        [1, {id: 1, transitions: [3,4]}],
+        [2, {id: 2, transitions: [1,2]}],
+        [3, {id: 3, transitions: []}]
+      ],
+      transition_map: [
+        [0, {id: 0, from: 0, to: 1, input: 'a'}],
+        [1, {id: 1, from: 2, to: 0, input: ''}],
+        [2, {id: 2, from: 2, to: 3, input: ''}],
+        [3, {id: 3, from: 1, to: 0, input: ''}],
+        [4, {id: 4, from: 1, to: 3, input: ''}]
+      ]
+    })
+
+    assert_post_with_nfa('a?', {
+      start: 2,
+      end: 3,
+      /**
+       * 0 -> 1
+       * 2 -> 0
+       * 2 -> 3
+       * 1 -> 3
+       */
+      state_map: [
+        [0, {id: 0, transitions: [0]}],
+        [1, {id: 1, transitions: [3]}],
+        [2, {id: 2, transitions: [1,2]}],
+        [3, {id: 3, transitions: []}]
+      ],
+      transition_map: [
+        [0, {id: 0, from: 0, to: 1, input: 'a'}],
+        [1, {id: 1, from: 2, to: 0, input: ''}],
+        [2, {id: 2, from: 2, to: 3, input: ''}],
+        [3, {id: 3, from: 1, to: 3, input: ''}]
+      ]
+    })
+
+    assert_post_with_nfa('a+', {
+      start: 2,
+      end: 3,
+      /**
+       * 0 -> 1
+       * 2 -> 0
+       * 1 -> 0
+       * 1 -> 3
+       */
+      state_map: [
+        [0, {id: 0, transitions: [0]}],
+        [1, {id: 1, transitions: [2,3]}],
+        [2, {id: 2, transitions: [1]}],
+        [3, {id: 3, transitions: []}]
+      ],
+      transition_map: [
+        [0, {id: 0, from: 0, to: 1, input: 'a'}],
+        [1, {id: 1, from: 2, to: 0, input: ''}],
+        [2, {id: 2, from: 1, to: 0, input: ''}],
+        [3, {id: 3, from: 1, to: 3, input: ''}]
+      ]
+    })
+
+    function assert_post_with_nfa(post, nfa_def) {
+      const nfa = NFA.createFromPostfixExpression(post)
+      assert.equal(JSON.stringify(nfa), JSON.stringify(nfa_def), post)
     }
   })
 })
-
-function printNfa(nfa) {
-  const stack = {}
-  return printState(nfa.start, 0)
-
-  function printState(s, indent) {
-    if (!s) return ''
-    if (stack[s.id]) {
-      stack[s.id] = false
-      return '  '.repeat(indent) + s.id + ' *\n' // circle?
-    }
-    stack[s.id] = true
-
-    if (s.type === 'n') {
-      const str = '  '.repeat(indent) + s.id + ' [' + s.symbol + '] ->\n' + (
-        printState(s.out, indent + 1) +
-        printState(s.out1, indent + 1)
-      ) + '\n'
-      stack[s.id] = false
-      return str
-    }
-    if (s.type === 'e') {
-      if (s.out1) {
-        const str = '  '.repeat(indent) + s.id + ' (e) ->\n' + (
-          printState(s.out, indent + 1) +
-          printState(s.out1, indent + 1)
-        ) + '\n'
-        stack[s.id] = false
-        return str
-      }
-      const str = printState(s.out, indent)
-      stack[s.id] = false
-      return str
-    }
-    const str = '  '.repeat(indent) + 'end'
-    stack[s.id] = false
-    return str
-  }
-}

@@ -3,7 +3,8 @@ module.exports = {
     nfa: './index.js',
     app: './app/index.js'
   },
-  optimization: {
-    minimize: false
-  }
+  mode: 'production',
+  // optimization: {
+  //   minimize: false
+  // }
 }
