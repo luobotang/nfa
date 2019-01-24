@@ -1,8 +1,9 @@
-const { regex2post, NFA } = require('./lib/nfa')
-const { match } = require('./lib/simulator')
+const NFA = require('./lib/nfa')
+const regex2post = require('./lib/regex2post')
+const simulator = require('./lib/simulator')
 
 module.exports = {
+  NFA,
   regex2post,
-  match,
-  NFA
+  simulator
 }

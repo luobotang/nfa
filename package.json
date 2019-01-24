@@ -13,6 +13,7 @@
   "author": "luobotang",
   "license": "MIT",
   "devDependencies": {
+    "benchmark": "^2.1.4",
     "mocha": "^5.2.0",
     "vis": "^4.21.0",
     "webpack": "^4.20.2",

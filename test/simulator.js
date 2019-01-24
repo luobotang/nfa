@@ -1,6 +1,6 @@
 const assert = require('assert')
-const { NFA } = require('../lib/nfa')
-const { run } = require('../lib/simulator')
+const NFA = require('../lib/nfa')
+const { run, runWithBacktrack } = require('../lib/simulator')
 
 describe('simulator', function() {
   const match_cases = [
@@ -58,6 +58,16 @@ describe('simulator', function() {
       for (let i = 1, len = def.length; i < len; i++) {
         let [str, expected] = def[i]
         assert.equal(run(nfa, str), expected, `run "${regex}" on "${str}"`)
+      }
+    })
+  })
+  it('runWithBacktrack()', () => {
+    match_cases.forEach((def) => {
+      const regex = def[0]
+      const nfa = NFA.createFromeRegex(regex)
+      for (let i = 1, len = def.length; i < len; i++) {
+        let [str, expected] = def[i]
+        assert.equal(runWithBacktrack(nfa, str), expected, `runWithBacktrack "${regex}" on "${str}"`)
       }
     })
   })
