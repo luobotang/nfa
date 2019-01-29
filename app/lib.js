@@ -1,2 +1,2 @@
 window.vis = require('vis')
-window.nfa = require('..')
+window.lib = require('..')
