@@ -1,7 +1,7 @@
 module.exports = {
   entry: {
     nfa: './index.js',
-    app: './app/index.js'
+    lib: './app/lib.js'
   },
   mode: 'production',
   // optimization: {
