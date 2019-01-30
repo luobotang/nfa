@@ -107,24 +107,23 @@
   function drawDfa(dfa) {
     const nodes = []
     const edges = []
-
-    console.log(dfa)
-
     const {start, end, states, transitions} = dfa
-    const start_node = {id: 'start', label: ' ', shape: 'circle', color: STYLES.start_state_color}
-    const end_node = {id: 'end', label: ' ', shape: 'circle', color: STYLES.end_state_color}
 
-    nodes.push(start_node, end_node)
     states.forEach((state) => {
-      if (state === start || end.indexOf(state) > -1) return
-      nodes.push({id: state, label: ' ', shape: 'circle'})
+      const node = {id: state, label: ' ', shape: 'circle'}
+      if (state === start) {
+        node.color = STYLES.start_state_color
+      } else if (end.indexOf(state) > -1) {
+        node.color = STYLES.end_state_color
+      }
+      nodes.push(node)
     })
 
     transitions.forEach((transition) => {
       const {from, to, input} = transition
       edges.push({
-        from: from === start ? 'start' : from,
-        to: end.indexOf(to) > -1 ? 'end' : to,
+        from,
+        to,
         label: input,
         arrows: 'to',
         color: {color: 'gray'},
