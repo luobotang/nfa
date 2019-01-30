@@ -8,14 +8,16 @@
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
-  <div class="container">
+  <header class="head">
     <div class="cmd">
       <input id="regexp" class="cmd__input" type="text" value="(a+|b)c" placeholder="input regexp...">
       <button id="action" class="cmd__btn">GO</button>
     </div>
+  </header>
+  <section class="body">
     <div id="canvas-nfa" class="canvas"></div>
     <div id="canvas-dfa" class="canvas"></div>
-  </div>
+  </section>
   <script src="../dist/lib.js"></script>
   <script src="index.js"></script>
 </body>
