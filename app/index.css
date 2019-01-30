@@ -15,6 +15,9 @@ header {
   margin: 0 auto;
   max-width: 800px;
 }
+.cmd + .cmd {
+  border-top: 1px solid #333;
+}
 .cmd__input {
   flex: 1;
   padding: 10px;
@@ -33,10 +36,32 @@ header {
   background: #fff;
   outline: none;
   user-select: none;
+  cursor: pointer;
+}
+.cmd__btn:hover {
+  background: #f0f0f0;
+}
+.cmd__btn:active {
+  background: #ddd;
 }
 .canvas {
   margin: 0 auto;
   max-width: 1200px;
   height: 500px;
-  border-bottom: 1px solid #e5e5e5;
+}
+.canvas + .canvas {
+  border-top: 1px solid #e5e5e5;
+}
+
+.inspector {
+  padding: 20px;
+}
+.inspector__result {
+  margin: 0 auto;
+  max-width: 800px;
+  font-size: 20px;
+  color: #999;
+}
+.inspector__result b {
+  color: #333;
 }

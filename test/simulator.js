@@ -54,7 +54,7 @@ describe('simulator', function() {
   it('run()', () => {
     match_cases.forEach((def) => {
       const regex = def[0]
-      const nfa = NFA.createFromeRegex(regex)
+      const nfa = NFA.createFromRegexp(regex)
       for (let i = 1, len = def.length; i < len; i++) {
         let [str, expected] = def[i]
         assert.equal(run(nfa, str), expected, `run "${regex}" on "${str}"`)
@@ -64,7 +64,7 @@ describe('simulator', function() {
   it('runWithBacktrack()', () => {
     match_cases.forEach((def) => {
       const regex = def[0]
-      const nfa = NFA.createFromeRegex(regex)
+      const nfa = NFA.createFromRegexp(regex)
       for (let i = 1, len = def.length; i < len; i++) {
         let [str, expected] = def[i]
         assert.equal(runWithBacktrack(nfa, str), expected, `runWithBacktrack "${regex}" on "${str}"`)

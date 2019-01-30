@@ -1,42 +1,8 @@
 (function() {
-  const VIS = window.vis
-  const LIB = window.lib
+  const vis = window.vis
+  const {NFA, DFA} = window.lib
+  const {NETWORK_OPTIONS, render_nfa_to_network_data, render_dfa_to_network_data} = window.renderer
 
-  const NETWORK_OPTIONS = {
-    layout: {
-      randomSeed: 4 // 固定seed，确保相同数据每次绘制结果不变，选择4时缺省数据显示效果较好
-    },
-    nodes: {
-      font: {
-        color: '#333333',
-        bold: {
-          color: '#ff3333'
-        }
-      },
-      color: {
-        border: '#333333',
-        background: '#f0f0f0',
-        highlight: {
-          border: '#ff3333',
-          background: '#fff0f0'
-        }
-      }
-    },
-    edges: {
-      arrows: {
-        to: true
-      },
-      color: {
-        color: '#dddddd',
-        highlight: '#ffcccc'
-      }
-    }
-  }
-  const STYLES = {
-    start_state_color: {border: 'green', background: 'rgb(150,255,150)'},
-    end_state_color: {border: 'red', background: 'rgb(255,150,150)'}
-  }
-  
   let network_nfa = null
   let network_dfa = null
 
@@ -55,82 +21,21 @@
   
   function render() {
     const regexp = document.querySelector('#regexp').value
-    const nfa = LIB.NFA.createFromeRegex(regexp)
-    const data_nfa = drawNfa(nfa)
-    const dfa = LIB.DFA.createFromNFA(nfa)
-    const data_dfa = drawDfa(dfa)
+    const nfa = NFA.createFromRegexp(regexp)
+    const dfa = DFA.createFromNFA(nfa)
+
+    const data_nfa = render_nfa_to_network_data(nfa)
     if (!network_nfa) {
-      network_nfa = new VIS.Network(document.querySelector('#canvas-nfa'), data_nfa, NETWORK_OPTIONS)
-      network_dfa = new VIS.Network(document.querySelector('#canvas-dfa'), data_dfa, NETWORK_OPTIONS)
+      network_nfa = new vis.Network(document.querySelector('#canvas-nfa'), data_nfa, NETWORK_OPTIONS)
     } else {
       network_nfa.setData(data_nfa)
+    }
+
+    const data_dfa = render_dfa_to_network_data(dfa)
+    if (!network_dfa) {
+      network_dfa = new vis.Network(document.querySelector('#canvas-dfa'), data_dfa, NETWORK_OPTIONS)
+    } else {
       network_dfa.setData(data_dfa)
     }
-  }
-  
-  function drawNfa(nfa) {
-    const nodes = []
-    const edges = []
-    const {transition_map} = nfa
-  
-    nfa.travel((state) => {
-      let node = {id: state.id, label: ' ', shape: 'circle'}
-      // start state
-      if (nodes.length === 0) {
-        node.color = STYLES.start_state_color
-      }
-      if (state.transitions.length) {
-        state.transitions.forEach(addEdge)
-      } else { // end state
-        node.color = STYLES.end_state_color
-      }
-      nodes.push(node)
-    })
-  
-    function addEdge(id) {
-      const transiton = transition_map.get(id)
-      const {from, to, input} = transiton
-      const isEpsilon = input === ''
-      edges.push({
-        from,
-        to,
-        label: isEpsilon ? 'ϵ' : input,
-        arrows: 'to',
-        color: {color: 'gray'},
-        font: isEpsilon ? {align: 'horizontal'} : {align: 'horizontal', color: 'rgb(255,0,0)'}
-      })
-    }
-  
-    return {nodes, edges}
-  }
-
-  function drawDfa(dfa) {
-    const nodes = []
-    const edges = []
-    const {start, end, states, transitions} = dfa
-
-    states.forEach((state) => {
-      const node = {id: state, label: ' ', shape: 'circle'}
-      if (state === start) {
-        node.color = STYLES.start_state_color
-      } else if (end.indexOf(state) > -1) {
-        node.color = STYLES.end_state_color
-      }
-      nodes.push(node)
-    })
-
-    transitions.forEach((transition) => {
-      const {from, to, input} = transition
-      edges.push({
-        from,
-        to,
-        label: input,
-        arrows: 'to',
-        color: {color: 'gray'},
-        font: {align: 'horizontal', color: 'rgb(255,0,0)'}
-      })
-    })
-
-    return {nodes, edges}
   }
 })()

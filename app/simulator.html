@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Simulator</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <header class="head">
+    <div class="cmd">
+      <input id="input-regx" class="cmd__input" type="text" value="(a+|b)c" placeholder="input regexp...">
+    </div>
+    <div class="cmd">
+      <input id="input-text" class="cmd__input" type="text" value="aac" placeholder="input text for match...">
+      <button id="btn-run" class="cmd__btn">RUN</button>
+      <button id="btn-stop" class="cmd__btn">STOP</button>
+    </div>
+  </header>
+  <section class="body">
+    <div id="canvas" class="canvas"></div>
+  </section>
+  <section class="inspector">
+    <div id="result" class="inspector__result"></div>
+  </section>
+  <script src="../dist/lib.js"></script>
+  <script src="vis.min.js"></script>
+  <script src="renderer.js"></script>
+  <script src="simulator.js"></script>
+</body>
+</html>
