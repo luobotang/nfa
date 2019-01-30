@@ -28,6 +28,10 @@ header {
 .cmd__input:focus {
   box-shadow: inset 0 0 10px #333;
 }
+.cmd__input:disabled {
+  background: #eee;
+  cursor: not-allowed;
+}
 .cmd__btn {
   padding: 10px;
   font-size: 18px;
@@ -43,6 +47,19 @@ header {
 }
 .cmd__btn:active {
   background: #ddd;
+}
+.cmd__btn-checkbox.s-checked {
+  color: #fff;
+  background: #666;
+}
+.cmd__btn:disabled {
+  color: #999;
+  background: #eee;
+  cursor: not-allowed;
+}
+.cmd__btn-checkbox.s-checked:disabled {
+  color: #ccc;
+  background: #666;
 }
 .canvas {
   margin: 0 auto;
