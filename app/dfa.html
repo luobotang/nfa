@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>NFA -> DFA</title>
+  <link rel="stylesheet" href="dfa.css">
+</head>
+<body>
+  <div id="root">
+    <div class="controller">
+      <span class="regexp">{{ regexp }}</span>
+      <button @click="running ? stop() : start()">{{ running ? 'Stop' : 'Start' }}</button>
+      <button :disabled="!running" @click="next">Next</button>
+    </div>
+    <div class="container">
+      <div class="canvas" ref="canvas"></div>
+      <div class="inspector">
+        <div class="inspector__set-list">
+          <div v-for="set in set_list" :key="set.id" class="inspector__set-list-item" :class="{'inspector__set-list-item--visited': set.visited}">
+            {{ set.id }}
+          </div>
+        </div>
+        <div class="inspector__transition-list">
+          <div v-for="transition in transition_list" :key="transition.id" class="transition">
+            <span class="transition__from">{{ transition.from }}</span>
+            <span class="transition__input">{{ transition.input }}</span>
+            <span class="transition__to">{{ transition.to }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-show="dfa_visible" class="dfa-container">
+      <div class="dfa-close" @click="dfa_visible = false">x</div>
+      <div class="dfa" ref="dfa"></div>
+    </div>
+  </div>
+  <script src="../dist/lib.js"></script>
+  <script src="vis.min.js"></script>
+  <script src="renderer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="dfa.js"></script>
+</body>
+</html>

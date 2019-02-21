@@ -1,0 +1,82 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.container {
+  display: flex;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+.canvas {
+  width: 50%;
+  min-width: 400px;
+  height: 600px;
+}
+.inspector {
+  flex: 1;
+  display: flex;
+}
+.inspector__set-list {
+  width: 200px;
+  height: 100%;
+  border-left: 1px solid #eee;
+}
+.inspector__set-list-item {
+  padding: 5px 15px;
+  border-bottom: 1px solid #eee;
+}
+.inspector__set-list-item--visited {
+  color: #999;
+}
+.inspector__transition-list {
+  flex: 1;
+  border-left: 1px solid #eee;
+  height: 100%;
+}
+.transition {
+  display: flex;
+  padding: 5px 10px;
+  border-bottom: 1px solid #eee;
+}
+.transition__from {
+  flex: 1;
+  text-align: right;
+}
+.transition__to {
+  flex: 1;
+}
+.transition__input {
+  width: 20px;
+  text-align: center;
+}
+.dfa-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+  background: rgba(255,255,255,0.8);
+}
+.dfa {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.dfa-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  font-size: 48px;
+  line-height: 80px;
+  text-align: center;
+  color: #999;
+  z-index: 10;
+  cursor: pointer;
+}
+.dfa-close:hover {
+  color: #333;
+}
