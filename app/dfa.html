@@ -10,9 +10,10 @@
 <body>
   <div id="root">
     <div class="controller">
-      <span class="regexp">{{ regexp }}</span>
-      <button @click="running ? stop() : start()">{{ running ? 'Stop' : 'Start' }}</button>
-      <button :disabled="!running" @click="next">Next</button>
+      <span class="controller__regexp">{{ regexp }}</span>
+      <button @click="running ? stop() : start()" class="controller__btn">{{ running ? 'Stop' : 'Start' }}</button>
+      <button :disabled="!running" @click="next" class="controller__btn">Next</button>
+      <div v-show="dfa_generated" class="controller__link" @click="dfa_visible = true">DFA</div>
     </div>
     <div class="container">
       <div class="canvas" ref="canvas"></div>

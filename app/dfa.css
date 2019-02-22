@@ -2,6 +2,28 @@
   margin: 0;
   padding: 0;
 }
+.controller {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: #fafafa;
+}
+.controller__regexp {
+  width: 50%;
+  font-size: 16px;
+  font-family: monospace;
+}
+.controller__btn {
+  margin-left: 10px;
+  padding: 0 10px;
+  line-height: 30px;
+}
+.controller__link {
+  padding: 10px 20px;
+  color: #66f;
+  text-decoration: underline;
+  cursor: pointer;
+}
 .container {
   display: flex;
   border-top: 1px solid #eee;
@@ -46,8 +68,9 @@
   flex: 1;
 }
 .transition__input {
-  width: 20px;
+  width: 50px;
   text-align: center;
+  color: red;
 }
 .dfa-container {
   position: fixed;

@@ -35,23 +35,24 @@
       },
       stop() {
         this.running = false
+        this.network_nfa.setSelection({nodes: []})
       },
       next() {
         this.nextStep()
       },
       update({inputs, visited, set, transitions}) {
         const set_list = []
+        let nextSet = null
         set.forEach(id => {
-          set_list.push({
-            id,
-            visited: visited.has(id)
-          })
+          const v = visited.has(id)
+          set_list.push({ id, visited: v })
+          if (!v && !nextSet) nextSet = id
         })
         this.set_list = set_list
 
         this.transition_list = transitions
 
-        // todo
+        this.network_nfa.setSelection({nodes: nextSet ? nextSet.split('-') : []}, {highlightEdges: false})
       },
       done(dfa) {
         this.dfa_generated = true
